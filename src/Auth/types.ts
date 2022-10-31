@@ -33,7 +33,6 @@ export interface RegistrationCodeViewModel {
     userId: string
     email:string
     code: string
-    confirm:boolean
     expirationDate: Date
     restartTime:Date
 }

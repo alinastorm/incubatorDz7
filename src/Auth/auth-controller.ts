@@ -53,17 +53,14 @@ class AuthController {
             const result: APIErrorResult = { errorsMessages: [{ message: "code expired", field: "code" }] }
             return res.status(400).json(result)
         }
-        //TODO примененнные коды возможно лучше удалять что бы ускорить поиск и сократить место и соотвественно удалить эту проверку и applied из модели
-        if (codes[0].confirm) {
-            const result: APIErrorResult = { errorsMessages: [{ message: "email is confirmed", field: "code" }] }
-            return res.status(400).json(result)
-        }
-
-        const userId = codes[0].userId      
+        
+        const userId = codes[0].userId
         await usersRepository.updateOne<UserViewModel>(userId, { confirm: true })
 
-        const idDocCode = codes[0].id
-        await registrationCode.updateOne<RegistrationCodeViewModel>(idDocCode, { confirm: true })
+        const codesUser = await registrationCode.readAll<RegistrationCodeViewModel>({ userId })
+        await Promise.all(codesUser.map(async ({ id }) => {
+            await registrationCode.deleteOne<RegistrationCodeViewModel>(id)
+        }))
 
         res.sendStatus(204)
     }
@@ -121,7 +118,7 @@ class AuthController {
         const restartTime = add(new Date(), {
             minutes: 2
         })
-        const element: Omit<RegistrationCodeViewModel, 'id'> = { email, confirm: false, code, expirationDate, userId, restartTime }
+        const element: Omit<RegistrationCodeViewModel, 'id'> = { email, code, expirationDate, userId, restartTime }
         await registrationCode.createOne<RegistrationCodeViewModel>(element)
 
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
@@ -136,10 +133,6 @@ class AuthController {
         const codes = await registrationCode.readAll<RegistrationCodeViewModel>(filterEmail)
         if (!codes.length) {
             const result: APIErrorResult = { errorsMessages: [{ message: "email not found", field: "email" }] }
-            return res.status(400).json(result)
-        }
-        if (codes[0].confirm) {
-            const result: APIErrorResult = { errorsMessages: [{ message: "email confirmed", field: "email" }] }
             return res.status(400).json(result)
         }
         if (codes[0].restartTime < new Date()) {
@@ -169,9 +162,9 @@ class AuthController {
             minutes: 3
         })
         const restartTime = add(new Date(), {
-            minutes: 2
+            minutes: 0
         })
-        const element: Omit<RegistrationCodeViewModel, 'id'> = { email, confirm: false, code, expirationDate, userId: codes[0].userId, restartTime }
+        const element: Omit<RegistrationCodeViewModel, 'id'> = { email, code, expirationDate, userId: codes[0].userId, restartTime }
         await registrationCode.createOne<RegistrationCodeViewModel>(element)
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     }
