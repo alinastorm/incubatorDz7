@@ -34,7 +34,7 @@ class Repository {
         const result = await this.dataService.replaceOne(this.collectionName, id, data)
         return result
     }
-    async deleteOne(id: string): Promise<boolean> {
+    async deleteOne<T>(id: string): Promise<boolean> {
         return await this.dataService.deleteOne(this.collectionName, id)
     }
     async deleteAll(): Promise<boolean> {
