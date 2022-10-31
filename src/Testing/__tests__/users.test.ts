@@ -1,6 +1,6 @@
 // const request = require("supertest")
 import request from "supertest"
-import DbMongo from "../../_common/db-adapters/mongo/mongoDb-adapter"
+import DbMongo from "../../_common/db/mongo/mongoDb-adapter"
 import Ajv from "ajv"
 import { Response } from 'express';
 import { UserViewModel } from "../../Users/types"

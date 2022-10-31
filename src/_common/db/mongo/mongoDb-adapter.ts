@@ -60,7 +60,6 @@ class DbMongo implements AdapterType {
                 return { id: _id.toString(), ...other }
             })
     }
-
     async readCount(collectionName: string, filter?: Filter<IObject>) {
         const collection: Collection<Document> = database.collection(collectionName)
         if (filter) return await collection.countDocuments(filter)

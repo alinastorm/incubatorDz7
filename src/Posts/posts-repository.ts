@@ -1,8 +1,8 @@
 import { Filter } from 'mongodb';
-import mongoDbAdapter from '../_common/db-adapters/mongo/mongoDb-adapter';
+import mongoDbAdapter from '../_common/db/mongo/mongoDb-adapter';
 import commentsRepository from '../Comments/comments-repository';
 import Repository from '../_common/repository/Repository';
-import { AdapterType } from '../_common/db-adapters/mongo/types';
+import { AdapterType } from '../_common/db/mongo/types';
 import { CommentBdModel } from '../Comments/types';
 
 
@@ -16,7 +16,7 @@ class PostsRepository extends Repository {
         const isPostDeleted = await super.deleteOne(id)
         if (!isPostDeleted) return false
 
-        const filter: Filter<CommentBdModel> = { postId: id }
+        const filter: Partial<CommentBdModel> = { postId: id }
         const comments = await commentsRepository.readAll<CommentBdModel>(filter)
         comments.forEach(async ({ id }) => {
             await commentsRepository.deleteOne(id)

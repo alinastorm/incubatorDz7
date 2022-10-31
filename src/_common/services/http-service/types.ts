@@ -21,5 +21,5 @@ export type RequestWithParamsQueryBody<P, Q, B> = Request<P, {}, B, Q>
 export type RequestWithUser<U> = Request & U
 
 export type ResponseWithCode<C extends number> = Response<{}, {}, C>
-export type ResponseWithBodyCode<B, C extends number> = Response<B, {}, C>
+export type ResponseWithBodyCode<B , C extends number> = Response<B, {}, C>
 

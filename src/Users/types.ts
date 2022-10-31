@@ -1,13 +1,16 @@
-export interface UserInputModel {
-    login: string // maxLength: 10 minLength: 3
-    password: string // maxLength: 20 minLength: 6
-    email: string // pattern: ^ [\w -\.] +@([\w -] +\.) +[\w -]{ 2, 4 } $
-}
+
 export interface UserViewModel {
     id: string
     login: string
     email: string
+    confirm:boolean
     createdAt?: string //	TODO в дз не обязательный в интерфей
+}
+
+export interface UserInputModel {
+    login: string // maxLength: 10 minLength: 3
+    password: string // maxLength: 20 minLength: 6
+    email: string // pattern: ^ [\w -\.] +@([\w -] +\.) +[\w -]{ 2, 4 } $
 }
 
 export interface UsersSearchPaginationModel {

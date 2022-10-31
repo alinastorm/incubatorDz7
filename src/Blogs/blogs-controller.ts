@@ -30,9 +30,9 @@ class BlogController {
 
         const { name, youtubeUrl } = req.body
         const createdAt = new Date().toISOString()
-        const query: Omit<BlogViewModel, "id"> = { createdAt, name, youtubeUrl }
+        const element: Omit<BlogViewModel, "id"> = { createdAt, name, youtubeUrl }
 
-        const id: string = await blogsRepository.createOne(query)
+        const id: string = await blogsRepository.createOne(element)
         const users: BlogViewModel | null = await blogsRepository.readOne(id)
         if (!users) return res.status(HTTP_STATUSES.NOT_FOUND_404)
 
